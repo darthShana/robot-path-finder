@@ -1,3 +1,12 @@
+to build the code:
+
+cd orb-slam
+chmod +x build.sh
+./build.sh
+
+
+
+
 to run the code: 
 
 ./Examples/Stereo/stereo_kitti Vocabulary/ORBvoc.bin Examples/Stereo/KITTI00-02.yaml PATH_TO_DATASET_FOLDER/dataset/sequences/SEQUENCE_NUMBER 1
