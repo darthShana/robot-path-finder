@@ -29,10 +29,20 @@
 
 #include<System.h>
 #include "Tracking.h"
-#include "MQTTClient.h"
-#include "linux.cpp"
+#include "mqtt/async_client.h"
 
 using namespace std;
+
+const std::string DFLT_ADDRESS { "tcp://localhost:1883" };
+
+const string TOPIC { "data/rand" };
+const int	 QOS = 1;
+
+const auto PERIOD = seconds(5);
+
+const int MAX_BUFFERED_MSGS = 120;	// 120 * 5sec => 10min off-line buffering
+
+const string PERSIST_DIR { "data-persist" };
 
 
 int main(int argc, char **argv){
@@ -42,29 +52,18 @@ int main(int argc, char **argv){
         return 1;
     }
 
-    IPStack ipstack = IPStack();
-    const char* topic = "mbed-sample";
+    string address = (argc > 1) ? string(argv[1]) : DFLT_ADDRESS;
 
-    MQTT::Client<IPStack, Countdown> client = MQTT::Client<IPStack, Countdown>(ipstack);
+    mqtt::async_client cli(address, "", MAX_BUFFERED_MSGS, PERSIST_DIR);
 
-    const char* hostname = "192.168.87.250";
-    int port = 1883;
-    printf("Connecting to %s:%d\n", hostname, port);
-    int rc = ipstack.connect(hostname, port);
-    if (rc != 0){
-        printf("rc from TCP connect is %d\n", rc);
-    }
+    mqtt::connect_options connOpts;
+    connOpts.set_keep_alive_interval(MAX_BUFFERED_MSGS * PERIOD);
+    connOpts.set_clean_session(true);
+    connOpts.set_automatic_reconnect(true);
 
-    printf("MQTT connecting\n");
-    MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
-    data.MQTTVersion = 3;
-    data.clientID.cstring = (char*)"mbed-icraggs";
-    rc = client.connect(data);
-    if (rc != 0){
-        printf("rc from MQTT connect is %d\n", rc);
-    }
-    printf("MQTT connected\n");
-
+    // Create a topic object. This is a conventience since we will
+    // repeatedly publish messages with the same parameters.
+    mqtt::topic top(cli, TOPIC, QOS, true);
 
     // calibration and rectification of cameras (SLAM)
 
