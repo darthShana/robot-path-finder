@@ -29,25 +29,47 @@
 
 #include<System.h>
 #include "Tracking.h"
+#include "MQTTClient.h"
+#include "linux.cpp"
 
 using namespace std;
 
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv){
    
-    if(argc != 5)
-    {
+    if(argc != 5){
         cerr << endl << "Usage: ./stereo_kitti path_to_vocabulary path_to_settings path_to_sequence" << endl;
         return 1;
     }
 
+    IPStack ipstack = IPStack();
+    const char* topic = "mbed-sample";
 
-// calibration and rectification of cameras (SLAM)
+    MQTT::Client<IPStack, Countdown> client = MQTT::Client<IPStack, Countdown>(ipstack);
 
- cv::FileStorage fsSettings(argv[2], cv::FileStorage::READ);
-    if(!fsSettings.isOpened())
-    {
+    const char* hostname = "192.168.87.250";
+    int port = 1883;
+    printf("Connecting to %s:%d\n", hostname, port);
+    int rc = ipstack.connect(hostname, port);
+    if (rc != 0){
+        printf("rc from TCP connect is %d\n", rc);
+    }
+
+    printf("MQTT connecting\n");
+    MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
+    data.MQTTVersion = 3;
+    data.clientID.cstring = (char*)"mbed-icraggs";
+    rc = client.connect(data);
+    if (rc != 0){
+        printf("rc from MQTT connect is %d\n", rc);
+    }
+    printf("MQTT connected\n");
+
+
+    // calibration and rectification of cameras (SLAM)
+
+    cv::FileStorage fsSettings(argv[2], cv::FileStorage::READ);
+    if(!fsSettings.isOpened()){
         cerr << "ERROR: Wrong path to settings" << endl;
         return -1;
     }
@@ -73,8 +95,7 @@ int main(int argc, char **argv)
     int cols_r = fsSettings["RIGHT.width"];
 
     if(K_l.empty() || K_r.empty() || P_l.empty() || P_r.empty() || R_l.empty() || R_r.empty() || D_l.empty() || D_r.empty() ||
-            rows_l==0 || rows_r==0 || cols_l==0 || cols_r==0)
-    {
+            rows_l==0 || rows_r==0 || cols_l==0 || cols_r==0){
         cerr << "ERROR: Calibration parameters to rectify stereo are missing!" << endl;
         return -1;
     }
@@ -85,76 +106,77 @@ int main(int argc, char **argv)
 
 
 
-// Intializing camera feed (SLAM)
- cv::VideoCapture camera0(2);
-   if (!camera0.isOpened())
-   {
-     cerr << endl  <<"Could not open camera feed."  << endl;
-     return -1;
-   }
+    // Intializing camera feed (SLAM)
+    cv::VideoCapture camera0(2);
+    if (!camera0.isOpened()) {
+        cerr << endl  <<"Could not open camera feed."  << endl;
+        return -1;
+    }
 
 
 
 
- // Create SLAM system. It initializes all system threads and gets ready to process frames. (SLAM)
+    // Create SLAM system. It initializes all system threads and gets ready to process frames. (SLAM)
     ORB_SLAM2::System SLAM(argv[1],argv[2],ORB_SLAM2::System::STEREO,true,(bool)atoi(argv[4]));
-//ORB_SLAM2::Tracking yolo (SLAM&);
-
-
-
+    //ORB_SLAM2::Tracking yolo (SLAM&);
 
     cout << endl << "-------" << endl;
     cout << "Start processing sequence ..." << endl;
  
 
-  // Main loop (contains code for SLAM and Path Planning)
+    // Main loop (contains code for SLAM and Path Planning)
 
 
 
     cv::Mat imLeft, imRight, frame, imLeftRect, imRightRect;
-    for(int timeStamps = 0; timeStamps < 600 ; timeStamps++)
-    {
-       camera0 >> frame;
-imLeft = frame(cv::Rect(0, 0, frame.cols/2, frame.rows));
 
-imRight = frame(cv::Rect(frame.cols/2, 0, frame.cols / 2, frame.rows));
+    for(int timeStamps = 0; timeStamps < 600 ; timeStamps++) {
+        camera0 >> frame;
+        imLeft = frame(cv::Rect(0, 0, frame.cols/2, frame.rows));
 
- 
+        imRight = frame(cv::Rect(frame.cols/2, 0, frame.cols / 2, frame.rows));
 
-cv::remap(imLeft,imLeftRect,M1l,M2l,cv::INTER_LINEAR);
+        cv::remap(imLeft,imLeftRect,M1l,M2l,cv::INTER_LINEAR);
 
-    cv::remap(imRight,imRightRect,M1r,M2r,cv::INTER_LINEAR);
+        cv::remap(imRight,imRightRect,M1r,M2r,cv::INTER_LINEAR);
 
 
-cv::Rect rect1(0, 0, 9, 240);
-cv::Rect rect2(0, 0, 320, 61);
-cv::Rect rect3(211, 0, 109, 240);
-cv::Rect rect4(0, 185, 320, 55);
+        cv::Rect rect1(0, 0, 9, 240);
+        cv::Rect rect2(0, 0, 320, 61);
+        cv::Rect rect3(211, 0, 109, 240);
+        cv::Rect rect4(0, 185, 320, 55);
 
-cv::Rect rect11(0, 0, 6, 240);
-cv::Rect rect22(0, 0, 320, 67);
-cv::Rect rect33(214, 0, 106, 240);
-cv::Rect rect44(0, 190, 320, 50);
+        cv::Rect rect11(0, 0, 6, 240);
+        cv::Rect rect22(0, 0, 320, 67);
+        cv::Rect rect33(214, 0, 106, 240);
+        cv::Rect rect44(0, 190, 320, 50);
+
+        cv::rectangle(imLeftRect, rect1, cv::Scalar(0, 0, 0),CV_FILLED);
+        cv::rectangle(imLeftRect, rect2, cv::Scalar(0, 0, 0),CV_FILLED);
+        cv::rectangle(imLeftRect, rect3, cv::Scalar(0, 0, 0),CV_FILLED);
+        cv::rectangle(imLeftRect, rect4, cv::Scalar(0, 0, 0),CV_FILLED);
+
+        cv::rectangle(imRightRect, rect11, cv::Scalar(0, 0, 0),CV_FILLED);
+        cv::rectangle(imRightRect, rect22, cv::Scalar(0, 0, 0),CV_FILLED);
+        cv::rectangle(imRightRect, rect33, cv::Scalar(0, 0, 0),CV_FILLED);
+        cv::rectangle(imRightRect, rect44, cv::Scalar(0, 0, 0),CV_FILLED);
+
+        // Pass the images to the SLAM system (SLAM)
+        SLAM.TrackStereo(imLeftRect,imRightRect,timeStamps);
+        SLAM.SaveTrajectoryTUM("CameraTrajectory.txt");
+
+        SLAM.SaveTrajectoryTUM("CameraTrajectory2.txt");
+
+        // Real-time values of position and orientation from SLAM (these values would be used in Path Planning in a closed feedback loop to see if our robot is moving in the right direction and orientation).
+        float disp_x = SLAM.x;   // detects if robot is moving in left or right in a straight direction
+        float disp_y = SLAM.y;	 // detects if robot is moving up or down in a striaght direction (not used in our case)
+        float disp_z = SLAM.z;   // detects if robot is moving straight or backawards in a straight direction
+        float rot_x = SLAM.rx;	// roll orientation (not used yet but can be used to detect uphill or downhill)
+        float rot_y = SLAM.ry;	// yaw orientation (tells us the angle at which robot turns left or right)
+        float rot_z = SLAM.rz;	// pitch orientation (not used yet but can be used to detect uphill or downhill)
 
 
-
-
-cv::rectangle(imLeftRect, rect1, cv::Scalar(0, 0, 0),CV_FILLED);
-cv::rectangle(imLeftRect, rect2, cv::Scalar(0, 0, 0),CV_FILLED);
-cv::rectangle(imLeftRect, rect3, cv::Scalar(0, 0, 0),CV_FILLED);
-cv::rectangle(imLeftRect, rect4, cv::Scalar(0, 0, 0),CV_FILLED);
-
-cv::rectangle(imRightRect, rect11, cv::Scalar(0, 0, 0),CV_FILLED);
-cv::rectangle(imRightRect, rect22, cv::Scalar(0, 0, 0),CV_FILLED);
-cv::rectangle(imRightRect, rect33, cv::Scalar(0, 0, 0),CV_FILLED);
-cv::rectangle(imRightRect, rect44, cv::Scalar(0, 0, 0),CV_FILLED);
-
-  // Pass the images to the SLAM system (SLAM)
-    SLAM.TrackStereo(imLeftRect,imRightRect,timeStamps);
-SLAM.SaveTrajectoryTUM("CameraTrajectory.txt");
-
-
-}
+    }
 
 
     // Stop all threads
