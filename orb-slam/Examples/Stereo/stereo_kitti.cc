@@ -24,28 +24,14 @@
 #include<fstream>
 #include<iomanip>
 #include<chrono>
-#include <ctime>
 
 #include<opencv2/core/core.hpp>
 
 #include<System.h>
+#include <mosquittopp.h>
 #include "Tracking.h"
-#include "mqtt/async_client.h"
 
 using namespace std;
-using namespace std::chrono;
-
-
-const std::string DFLT_ADDRESS { "tcp://localhost:1883" };
-
-const string TOPIC { "data/rand" };
-const int	 QOS = 1;
-
-const auto PERIOD = seconds(5);
-
-const int MAX_BUFFERED_MSGS = 120;	// 120 * 5sec => 10min off-line buffering
-
-const string PERSIST_DIR { "data-persist" };
 
 
 int main(int argc, char **argv){
@@ -55,18 +41,6 @@ int main(int argc, char **argv){
         return 1;
     }
 
-    string address = (argc > 1) ? string(argv[1]) : DFLT_ADDRESS;
-
-    mqtt::async_client cli(address, "", MAX_BUFFERED_MSGS, PERSIST_DIR);
-
-    mqtt::connect_options connOpts;
-    connOpts.set_keep_alive_interval(MAX_BUFFERED_MSGS * PERIOD);
-    connOpts.set_clean_session(true);
-    connOpts.set_automatic_reconnect(true);
-
-    // Create a topic object. This is a conventience since we will
-    // repeatedly publish messages with the same parameters.
-    mqtt::topic top(cli, TOPIC, QOS, true);
 
     // calibration and rectification of cameras (SLAM)
 
