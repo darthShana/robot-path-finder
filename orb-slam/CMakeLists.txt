@@ -38,7 +38,7 @@ endif()
 
 find_package(Eigen3 3.1.0 REQUIRED)
 find_package(Pangolin REQUIRED)
-find_package(Mosquitto REQUIRED)
+find_package(mosquitto REQUIRED)
 
 include(FindPkgConfig)
 pkg_check_modules(CURLPP REQUIRED curlpp)
