@@ -38,6 +38,8 @@ endif()
 
 find_package(Eigen3 3.1.0 REQUIRED)
 find_package(Pangolin REQUIRED)
+find_library(MOSQUITTOPP_LIBRARY NAMES libmosquittopp mosquittopp)
+
 include(FindPkgConfig)
 pkg_check_modules(CURLPP REQUIRED curlpp)
 
@@ -104,7 +106,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Stereo)
 
 add_executable(stereo_kitti
 Examples/Stereo/stereo_kitti.cc)
-target_link_libraries(stereo_kitti ${PROJECT_NAME} ${PAHO_CPP_LIB})
+target_link_libraries(stereo_kitti ${PROJECT_NAME} ${MOSQUITTOPP_LIBRARY})
 
 add_executable(stereo_euroc
 Examples/Stereo/stereo_euroc.cc)
