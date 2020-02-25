@@ -39,7 +39,7 @@ endif()
 find_package(Eigen3 3.1.0 REQUIRED)
 find_package(Pangolin REQUIRED)
 include(FindPkgConfig)
-pkg_check_modules(MQTTPACKETCLIENT REQUIRED MQTTPacketClient)
+pkg_check_modules(MQTTCLIENT REQUIRED MQTTClient)
 
 include_directories(
 ${PROJECT_SOURCE_DIR}
@@ -104,7 +104,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Stereo)
 
 add_executable(stereo_kitti
 Examples/Stereo/stereo_kitti.cc)
-target_link_libraries(stereo_kitti ${PROJECT_NAME} ${MQTTPACKETCLIENT})
+target_link_libraries(stereo_kitti ${PROJECT_NAME} ${MQTTCLIENT})
 
 add_executable(stereo_euroc
 Examples/Stereo/stereo_euroc.cc)
@@ -131,7 +131,7 @@ target_link_libraries(bin_vocabulary ${PROJECT_SOURCE_DIR}/Thirdparty/DBoW2/lib/
 
 if(USE_EXAMPLE_WEBCAM)
     find_package(PkgConfig REQUIRED)
-    pkg_search_module(MQTTPACKETCLIENT REQUIRED MQTTPacketClient)
+    pkg_search_module(MQTTCLIENT REQUIRED MQTTClient)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
     add_executable(mono_uvc Examples/mono_uvc.cpp)
     target_link_libraries(mono_uvc ${PROJECT_NAME})
