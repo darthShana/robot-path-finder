@@ -172,17 +172,17 @@ int main(int argc, char **argv){
 
 
             // Real-time values of position and orientation from SLAM (these values would be used in Path Planning in a closed feedback loop to see if our robot is moving in the right direction and orientation).
-//            float disp_x = SLAM.x;   // detects if robot is moving in left or right in a straight direction
-//            float disp_y = SLAM.y;	 // detects if robot is moving up or down in a striaght direction (not used in our case)
-//            float disp_z = SLAM.z;   // detects if robot is moving straight or backawards in a straight direction
-//            float rot_x = SLAM.rx;	// roll orientation (not used yet but can be used to detect uphill or downhill)
-//            float rot_y = SLAM.ry;	// yaw orientation (tells us the angle at which robot turns left or right)
-//            float rot_z = SLAM.rz;	// pitch orientation (not used yet but can be used to detect uphill or downhill)
-//
-//            string payload =
-//                to_string(disp_x) + "," + to_string(disp_y) + "," + to_string(disp_z)+ "," +
-//                to_string(rot_x) + "," + to_string(rot_y) + "," + to_string(rot_z);
-//            top.publish(std::move(payload));
+            float disp_x = SLAM.x;   // detects if robot is moving in left or right in a straight direction
+            float disp_y = SLAM.y;	 // detects if robot is moving up or down in a striaght direction (not used in our case)
+            float disp_z = SLAM.z;   // detects if robot is moving straight or backawards in a straight direction
+            float rot_x = SLAM.rx;	// roll orientation (not used yet but can be used to detect uphill or downhill)
+            float rot_y = SLAM.ry;	// yaw orientation (tells us the angle at which robot turns left or right)
+            float rot_z = SLAM.rz;	// pitch orientation (not used yet but can be used to detect uphill or downhill)
+
+            string payload =
+                to_string(disp_x) + "," + to_string(disp_y) + "," + to_string(disp_z)+ "," +
+                to_string(rot_x) + "," + to_string(rot_y) + "," + to_string(rot_z);
+            top.publish(std::move(payload));
 
         }
 
