@@ -168,7 +168,7 @@ int main(int argc, char **argv){
 
             // Pass the images to the SLAM system (SLAM)
             SLAM.TrackStereo(imLeftRect,imRightRect,timeStamps);
-            SLAM.SaveTrajectoryTUM("CameraTrajectory.txt");
+//            SLAM.SaveTrajectoryTUM("CameraTrajectory.txt");
 
 
             // Real-time values of position and orientation from SLAM (these values would be used in Path Planning in a closed feedback loop to see if our robot is moving in the right direction and orientation).
