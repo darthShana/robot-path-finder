@@ -106,7 +106,7 @@ int main(int argc, char **argv){
 
 
     // Intializing camera feed (SLAM)
-    cv::VideoCapture camera0(2);
+    cv::VideoCapture camera0(0);
     if (!camera0.isOpened()) {
         cerr << endl  <<"Could not open camera feed."  << endl;
         return -1;
