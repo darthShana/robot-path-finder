@@ -38,7 +38,8 @@ endif()
 
 find_package(Eigen3 3.1.0 REQUIRED)
 find_package(Pangolin REQUIRED)
-find_package(mosquitto REQUIRED)
+find_package(PahoMqttCpp REQUIRED)
+find_package(PahoMqttC REQUIRED)
 
 include(FindPkgConfig)
 pkg_check_modules(CURLPP REQUIRED curlpp)
@@ -106,7 +107,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Stereo)
 
 add_executable(stereo_kitti
 Examples/Stereo/stereo_kitti.cc)
-target_link_libraries(stereo_kitti ${PROJECT_NAME} ${CURLPP_LDFLAGS})
+target_link_libraries(stereo_kitti ${PROJECT_NAME} paho-mqttpp3 paho-mq)
 
 add_executable(stereo_euroc
 Examples/Stereo/stereo_euroc.cc)

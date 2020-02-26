@@ -28,10 +28,23 @@
 #include<opencv2/core/core.hpp>
 
 #include<System.h>
-#include <mosquittopp.h>
+#include "mqtt/async_client.h"
 #include "Tracking.h"
 
 using namespace std;
+using namespace std::chrono;
+
+const std::string address { "tcp://192.168.87.250:1883" };
+
+const string TOPIC { "data/rand" };
+const int	 QOS = 1;
+
+const auto PERIOD = seconds(5);
+
+const int MAX_BUFFERED_MSGS = 120;	// 120 * 5sec => 10min off-line buffering
+
+const string PERSIST_DIR { "data-persist" };
+
 
 
 int main(int argc, char **argv){
@@ -41,6 +54,16 @@ int main(int argc, char **argv){
         return 1;
     }
 
+    mqtt::async_client cli(address, "", MAX_BUFFERED_MSGS, PERSIST_DIR);
+
+	mqtt::connect_options connOpts;
+	connOpts.set_keep_alive_interval(MAX_BUFFERED_MSGS * PERIOD);
+	connOpts.set_clean_session(true);
+	connOpts.set_automatic_reconnect(true);
+
+	// Create a topic object. This is a conventience since we will
+	// repeatedly publish messages with the same parameters.
+	mqtt::topic top(cli, TOPIC, QOS, true);
 
     // calibration and rectification of cameras (SLAM)
 
@@ -102,58 +125,76 @@ int main(int argc, char **argv){
 
     // Main loop (contains code for SLAM and Path Planning)
 
+    try {
 
 
-    cv::Mat imLeft, imRight, frame, imLeftRect, imRightRect;
-
-    for(int timeStamps = 0; timeStamps < 600 ; timeStamps++) {
-        camera0 >> frame;
-        imLeft = frame(cv::Rect(0, 0, frame.cols/2, frame.rows));
-
-        imRight = frame(cv::Rect(frame.cols/2, 0, frame.cols / 2, frame.rows));
-
-        cv::remap(imLeft,imLeftRect,M1l,M2l,cv::INTER_LINEAR);
-
-        cv::remap(imRight,imRightRect,M1r,M2r,cv::INTER_LINEAR);
+        cout << "Connecting to server '" << address << "'..." << flush;
+        cli.connect(connOpts)->wait();
+        cout << "OK\n" << endl;
 
 
-        cv::Rect rect1(0, 0, 9, 240);
-        cv::Rect rect2(0, 0, 320, 61);
-        cv::Rect rect3(211, 0, 109, 240);
-        cv::Rect rect4(0, 185, 320, 55);
+        cv::Mat imLeft, imRight, frame, imLeftRect, imRightRect;
 
-        cv::Rect rect11(0, 0, 6, 240);
-        cv::Rect rect22(0, 0, 320, 67);
-        cv::Rect rect33(214, 0, 106, 240);
-        cv::Rect rect44(0, 190, 320, 50);
+        for(int timeStamps = 0; timeStamps < 600 ; timeStamps++) {
+            camera0 >> frame;
+            imLeft = frame(cv::Rect(0, 0, frame.cols/2, frame.rows));
 
-        cv::rectangle(imLeftRect, rect1, cv::Scalar(0, 0, 0),CV_FILLED);
-        cv::rectangle(imLeftRect, rect2, cv::Scalar(0, 0, 0),CV_FILLED);
-        cv::rectangle(imLeftRect, rect3, cv::Scalar(0, 0, 0),CV_FILLED);
-        cv::rectangle(imLeftRect, rect4, cv::Scalar(0, 0, 0),CV_FILLED);
+            imRight = frame(cv::Rect(frame.cols/2, 0, frame.cols / 2, frame.rows));
 
-        cv::rectangle(imRightRect, rect11, cv::Scalar(0, 0, 0),CV_FILLED);
-        cv::rectangle(imRightRect, rect22, cv::Scalar(0, 0, 0),CV_FILLED);
-        cv::rectangle(imRightRect, rect33, cv::Scalar(0, 0, 0),CV_FILLED);
-        cv::rectangle(imRightRect, rect44, cv::Scalar(0, 0, 0),CV_FILLED);
+            cv::remap(imLeft,imLeftRect,M1l,M2l,cv::INTER_LINEAR);
 
-        // Pass the images to the SLAM system (SLAM)
-        SLAM.TrackStereo(imLeftRect,imRightRect,timeStamps);
-        SLAM.SaveTrajectoryTUM("CameraTrajectory.txt");
-
-        SLAM.SaveTrajectoryTUM("CameraTrajectory2.txt");
-
-        // Real-time values of position and orientation from SLAM (these values would be used in Path Planning in a closed feedback loop to see if our robot is moving in the right direction and orientation).
-        float disp_x = SLAM.x;   // detects if robot is moving in left or right in a straight direction
-        float disp_y = SLAM.y;	 // detects if robot is moving up or down in a striaght direction (not used in our case)
-        float disp_z = SLAM.z;   // detects if robot is moving straight or backawards in a straight direction
-        float rot_x = SLAM.rx;	// roll orientation (not used yet but can be used to detect uphill or downhill)
-        float rot_y = SLAM.ry;	// yaw orientation (tells us the angle at which robot turns left or right)
-        float rot_z = SLAM.rz;	// pitch orientation (not used yet but can be used to detect uphill or downhill)
+            cv::remap(imRight,imRightRect,M1r,M2r,cv::INTER_LINEAR);
 
 
+            cv::Rect rect1(0, 0, 9, 240);
+            cv::Rect rect2(0, 0, 320, 61);
+            cv::Rect rect3(211, 0, 109, 240);
+            cv::Rect rect4(0, 185, 320, 55);
+
+            cv::Rect rect11(0, 0, 6, 240);
+            cv::Rect rect22(0, 0, 320, 67);
+            cv::Rect rect33(214, 0, 106, 240);
+            cv::Rect rect44(0, 190, 320, 50);
+
+            cv::rectangle(imLeftRect, rect1, cv::Scalar(0, 0, 0),CV_FILLED);
+            cv::rectangle(imLeftRect, rect2, cv::Scalar(0, 0, 0),CV_FILLED);
+            cv::rectangle(imLeftRect, rect3, cv::Scalar(0, 0, 0),CV_FILLED);
+            cv::rectangle(imLeftRect, rect4, cv::Scalar(0, 0, 0),CV_FILLED);
+
+            cv::rectangle(imRightRect, rect11, cv::Scalar(0, 0, 0),CV_FILLED);
+            cv::rectangle(imRightRect, rect22, cv::Scalar(0, 0, 0),CV_FILLED);
+            cv::rectangle(imRightRect, rect33, cv::Scalar(0, 0, 0),CV_FILLED);
+            cv::rectangle(imRightRect, rect44, cv::Scalar(0, 0, 0),CV_FILLED);
+
+            // Pass the images to the SLAM system (SLAM)
+            SLAM.TrackStereo(imLeftRect,imRightRect,timeStamps);
+            SLAM.SaveTrajectoryTUM("CameraTrajectory.txt");
+
+            SLAM.SaveTrajectoryTUM("CameraTrajectory2.txt");
+
+            // Real-time values of position and orientation from SLAM (these values would be used in Path Planning in a closed feedback loop to see if our robot is moving in the right direction and orientation).
+            float disp_x = SLAM.x;   // detects if robot is moving in left or right in a straight direction
+            float disp_y = SLAM.y;	 // detects if robot is moving up or down in a striaght direction (not used in our case)
+            float disp_z = SLAM.z;   // detects if robot is moving straight or backawards in a straight direction
+            float rot_x = SLAM.rx;	// roll orientation (not used yet but can be used to detect uphill or downhill)
+            float rot_y = SLAM.ry;	// yaw orientation (tells us the angle at which robot turns left or right)
+            float rot_z = SLAM.rz;	// pitch orientation (not used yet but can be used to detect uphill or downhill)
+
+            string payload =
+                to_string(disp_x) + "," + to_string(disp_y) + "," + to_string(disp_z)+ "," +
+                to_string(rot_x) + "," + to_string(rot_y) + "," + to_string(rot_z);
+            top.publish(std::move(payload));
+
+        }
+
+        cout << "\nDisconnecting..." << flush;
+        cli.disconnect()->wait();
+        cout << "OK" << endl;
     }
-
+    catch (const mqtt::exception& exc) {
+        cerr << exc.what() << endl;
+        return 1;
+    }
 
     // Stop all threads
     SLAM.Shutdown();
