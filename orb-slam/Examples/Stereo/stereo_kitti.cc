@@ -36,7 +36,7 @@ using namespace std::chrono;
 
 const std::string address { "tcp://192.168.87.250:1883" };
 
-const string TOPIC { "data/rand" };
+const string TOPIC { "robot/sensors/orbslam" };
 const int	 QOS = 1;
 
 const auto PERIOD = seconds(5);
