@@ -10,21 +10,21 @@ class ORBMQTTSubscriber(mqtt.Client):
     def __init__(self, q):
         self.x = 0
         self.z = 0
+        self.q = q
         super().__init__()
-
 
     def on_connect(self, mqttc, obj, flags, rc):
         print("rc: "+str(rc))
 
     def on_message(self, mqttc, obj, msg):
         full_str = msg.payload.decode().split(",")
-        x = float(full_str[0])
-        z = float(full_str[2])
+        x0 = float(full_str[0])
+        z0 = float(full_str[2])
 
-        if self.x != x or self.z != z:
-            self.q.put([x, z])
-            self.x = x
-            self.z = z
+        if self.x != x0 or self.z != z0:
+            self.q.put([x0, z0])
+            self.x = x0
+            self.z = z0
 
     def on_publish(self, mqttc, obj, mid):
         pass
@@ -44,6 +44,7 @@ class ORBMQTTSubscriber(mqtt.Client):
             rc = self.loop()
         return rc
 
+
 def draw(q):
     fig = plt.figure(figsize=(8, 8))
 
@@ -58,10 +59,12 @@ def draw(q):
 
     plt.show()
 
+
 def listen(q):
     mqttc = ORBMQTTSubscriber(q)
     rc = mqttc.run()
     print("rc: "+str(rc))
+
 
 q = Queue()
 x = threading.Thread(target=listen, args=(q,))
