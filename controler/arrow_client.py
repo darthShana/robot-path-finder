@@ -40,7 +40,7 @@ class Robot:
 
     def forward(self):
         if self.thrust < 2000:
-            self.thrust += 100
+            self.thrust -= 50
         requests.post(self.host + '/robot/commands', json={
             'thrust': self.thrust,
             'heading': self.heading
@@ -48,7 +48,7 @@ class Robot:
 
     def backward(self):
         if self.thrust > 1000:
-            self.thrust -= 100
+            self.thrust += 50
         requests.post(self.host + '/robot/commands', json={
             'thrust': self.thrust,
             'heading': self.heading
