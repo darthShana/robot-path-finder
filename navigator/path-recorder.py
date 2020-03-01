@@ -1,8 +1,11 @@
 import paho.mqtt.client as mqtt
 import matplotlib.pyplot as plt
 import threading
+import numpy as np
 
 from multiprocessing import Queue
+from geometry.Point import Point
+from geometry.Vector import Vector
 
 
 class ORBMQTTSubscriber(mqtt.Client):
@@ -21,7 +24,7 @@ class ORBMQTTSubscriber(mqtt.Client):
         x0 = float(full_str[0])
         z0 = float(full_str[2])
 
-        if self.x != x0 or self.z != z0:
+        if abs(self.x - x0) > 0.001 or abs(self.z - z0) > 0.001:
             self.q.put([x0, z0])
             self.x = x0
             self.z = z0
@@ -47,15 +50,32 @@ class ORBMQTTSubscriber(mqtt.Client):
 
 def draw(q):
     fig = plt.figure(figsize=(8, 8))
+    plt.gca().set_aspect('equal', adjustable='box')
+
+    waypoints = []
 
     while True:
         if not q.empty():
             [x0, y0] = q.get()
-            print(x0)
-            print(y0)
+            p = Point(x0, y0)
 
-            plt.plot(x0, y0, 'bo', markersize=1)
-            plt.pause(0.05)
+            if len(waypoints) == 0:
+                print(p)
+                plt.plot(p.x, p.y, 'r+', markersize=1)
+                waypoints.append(p)
+            elif waypoints[-1].distance(p) > 0.1:
+                if len(waypoints) > 1:
+                    if Vector(waypoints[-2], waypoints[-1]).angelBetween(Vector(waypoints[-1], p)) > np.pi/16:
+                        waypoints.append(p)
+                        print(p)
+                        plt.plot(p.x, p.y, 'r+', markersize=1)
+            else:
+                waypoints.append(p)
+                print(p)
+                plt.plot(p.x, p.y, 'r+', markersize=1)
+
+        plt.plot(x0, y0, 'bo', markersize=1)
+        plt.pause(0.05)
 
     plt.show()
 
