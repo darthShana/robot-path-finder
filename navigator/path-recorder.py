@@ -24,7 +24,7 @@ class ORBMQTTSubscriber(mqtt.Client):
         x0 = float(full_str[0])
         z0 = float(full_str[2])
 
-        if abs(self.x - x0) > 0.001 or abs(self.z - z0) > 0.001:
+        if abs(self.x - x0) > 0.01 or abs(self.z - z0) > 0.01:
             self.q.put([x0, z0])
             self.x = x0
             self.z = z0
@@ -60,22 +60,25 @@ def draw(q):
             p = Point(x0, y0)
 
             if len(waypoints) == 0:
-                print(p)
-                plt.plot(p.x, p.y, 'r+', markersize=1)
+                print(str(p.x)+","+str(p.y))
+                plt.plot(p.x, p.y, 'ro', markersize=1)
+                plt.pause(0.05)
                 waypoints.append(p)
-            elif waypoints[-1].distance(p) > 0.1:
+            elif waypoints[-1].distance(p) > 0.2:
                 if len(waypoints) > 1:
-                    if Vector(waypoints[-2], waypoints[-1]).angelBetween(Vector(waypoints[-1], p)) > np.pi/16:
+                    if Vector(waypoints[-2], waypoints[-1]).angle_between(Vector(waypoints[-1], p)) > np.pi/8:
                         waypoints.append(p)
-                        print(p)
-                        plt.plot(p.x, p.y, 'r+', markersize=1)
+                        print(str(p.x)+","+str(p.y))
+                        plt.plot(p.x, p.y, 'ro', markersize=1)
+                        plt.pause(0.05)
             else:
                 waypoints.append(p)
-                print(p)
-                plt.plot(p.x, p.y, 'r+', markersize=1)
+                print(str(p.x)+","+str(p.y))
+                plt.plot(p.x, p.y, 'ro', markersize=1)
+                plt.pause(0.05)
 
-        plt.plot(x0, y0, 'bo', markersize=1)
-        plt.pause(0.05)
+            plt.plot(x0, y0, 'bo', markersize=1)
+            plt.pause(0.05)
 
     plt.show()
 
