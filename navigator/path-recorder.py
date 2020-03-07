@@ -61,21 +61,21 @@ def draw(q):
 
             if len(waypoints) == 0:
                 print(str(p.x)+","+str(p.y))
-                plt.plot(p.x, p.y, 'ro', markersize=1)
+                plt.plot(p.x, p.y, 'r+', markersize=1)
                 plt.pause(0.05)
                 waypoints.append(p)
-            elif waypoints[-1].distance(p) > 0.2:
+            elif waypoints[-1].distance(p) > 0.1:
                 if len(waypoints) > 1:
-                    if Vector(waypoints[-2], waypoints[-1]).angle_between(Vector(waypoints[-1], p)) > np.pi/8:
+                    if Vector(waypoints[-2], waypoints[-1]).angle_between(Vector(waypoints[-1], p)) > np.pi/16:
                         waypoints.append(p)
                         print(str(p.x)+","+str(p.y))
-                        plt.plot(p.x, p.y, 'ro', markersize=1)
+                        plt.plot(p.x, p.y, 'r+', markersize=1)
                         plt.pause(0.05)
-            else:
-                waypoints.append(p)
-                print(str(p.x)+","+str(p.y))
-                plt.plot(p.x, p.y, 'ro', markersize=1)
-                plt.pause(0.05)
+                else:
+                    waypoints.append(p)
+                    print(str(p.x)+","+str(p.y))
+                    plt.plot(p.x, p.y, 'r+', markersize=1)
+                    plt.pause(0.05)
 
             plt.plot(x0, y0, 'bo', markersize=1)
             plt.pause(0.05)
