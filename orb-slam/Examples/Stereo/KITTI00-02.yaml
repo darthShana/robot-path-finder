@@ -4,16 +4,16 @@
 # Camera Parameters. Adjust them!
 #--------------------------------------------------------------------------------------------
 
-# Camera calibration and distortion parameters (OpenCV) 
+# Camera calibration and distortion parameters (OpenCV)
 Camera.fx: 1.0635518408426393e+02
-Camera.fy:  1.0635518408426393e+02
-Camera.cx:  7.7295522689819336e+01
+Camera.fy: 1.0635518408426393e+02
+Camera.cx: 7.7295522689819336e+01
 Camera.cy: 1.2572275257110596e+02
 
-Camera.k1: -3.8889107083871483e-01
-Camera.k2: 1.3100295086039102e-01
-Camera.p1:  5.8672068773389903e-03
-Camera.p2: -5.8984887636263604e-03
+Camera.k1: 0 #-3.8889107083871483e-01
+Camera.k2: 0 #1.3100295086039102e-01
+Camera.p1: 0 #5.8672068773389903e-03
+Camera.p2: 0 #-5.8984887636263604e-03
 
 
 
@@ -21,8 +21,8 @@ Camera.p2: -5.8984887636263604e-03
 Camera.width: 320
 Camera.height: 240
 
-# Camera frames per second 
-Camera.fps: 30.0
+# Camera frames per second
+Camera.fps: 5.0
 
 # stereo baseline times fx
 Camera.bf: 6.381
@@ -31,7 +31,7 @@ Camera.bf: 6.381
 Camera.RGB: 0
 
 # Close/Far threshold. Baseline times.
-ThDepth: 40
+ThDepth: 35
 #--------------------------------------------------------------------------------------------
 # Stereo Rectification. Only if you need to pre-rectify the images.
 # Camera.fx, .fy, etc must be the same as in LEFT.P
@@ -105,16 +105,16 @@ RIGHT.P:  !!opencv-matrix
 # ORB Extractor: Number of features per image
 ORBextractor.nFeatures: 1200
 
-# ORB Extractor: Scale factor between levels in the scale pyramid 	
+# ORB Extractor: Scale factor between levels in the scale pyramid
 ORBextractor.scaleFactor: 1.2
 
-# ORB Extractor: Number of levels in the scale pyramid	
+# ORB Extractor: Number of levels in the scale pyramid
 ORBextractor.nLevels: 8
 
 # ORB Extractor: Fast threshold
 # Image is divided in a grid. At each cell FAST are extracted imposing a minimum response.
 # Firstly we impose iniThFAST. If no corners are detected we impose a lower value minThFAST
-# You can lower these values if your images have low contrast			
+# You can lower these values if your images have low contrast
 ORBextractor.iniThFAST: 15 #20
 ORBextractor.minThFAST: 5 #7
 
@@ -133,4 +133,3 @@ Viewer.ViewpointZ: -1.8
 Viewer.ViewpointF: 500
 
 Map.mapfile: map.bin
-
