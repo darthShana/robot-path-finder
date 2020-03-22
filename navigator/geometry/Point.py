@@ -11,3 +11,6 @@ class Point:
     def distance(self, p):
         return numpy.linalg.norm(self.point-p.point)
 
+    def __repr__(self):
+        return str(self.x)+","+str(self.y)
+
