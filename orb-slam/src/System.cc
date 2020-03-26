@@ -435,6 +435,7 @@ void System::SaveTrajectoryTUM(const string &filename)
 	rx = q[0];
 	ry = q[1];
 	rz = q[2];
+	rw = q[3];
 
         f << setprecision(6) << *lT << " " <<  setprecision(9) << twc.at<float>(0) << " " << twc.at<float>(1) << " " << twc.at<float>(2) << " " << q[0] << " " << q[1] << " " << q[2] << " " << q[3] << endl;
     }
