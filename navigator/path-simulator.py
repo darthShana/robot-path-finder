@@ -14,5 +14,5 @@ with open('raw-data.txt') as csvfile:
     for row in readCSV:
         time.sleep(.5)
         print(row[1], row[3], row[5],)
-        client.publish("robot/sensors/orbslam", str(row[1]) + "," + str(row[2]) + "," + str(row[3]) + "," + str(row[4]) + "," + str(row[5]))
+        client.publish("robot/sensors/orbslam", str(row[1]) + "," + str(row[2]) + "," + str(row[3]) + "," + str(row[4]) + "," + str(row[5]) + "," + str(row[6]) + "," + str(row[7]))
 

@@ -17,11 +17,11 @@ def follow(q, way_points):
 
     while True:
         if not q.empty():
-            [x0, y0, y_rot] = q.get()
+            [x0, y0, x_rot, y_rot, z_rot, w_rot] = q.get()
             print(str(x0)+","+str(y0)+","+str(y_rot))
             current_location = Point(x0, y0)
 
-            convert_to_radians = y_rot * np.pi
+            convert_to_radians = np.arcsin(-2 * (x_rot * x_rot - w_rot * y_rot));
             current_orientation = Vector(Point(0, 0), Point(np.sin(convert_to_radians), np.cos(convert_to_radians)))
 
             plt.quiver(x0, y0, current_orientation.vector[0], current_orientation.vector[1])
