@@ -178,6 +178,7 @@ int main(int argc, char **argv){
             float rot_x = SLAM.rx;	// roll orientation (not used yet but can be used to detect uphill or downhill)
             float rot_y = SLAM.ry;	// yaw orientation (tells us the angle at which robot turns left or right)
             float rot_z = SLAM.rz;	// pitch orientation (not used yet but can be used to detect uphill or downhill)
+	    float rot_w = SLAM.rw;
 
             string payload =
                 to_string(disp_x) + "," + to_string(disp_y) + "," + to_string(disp_z)+ "," +
