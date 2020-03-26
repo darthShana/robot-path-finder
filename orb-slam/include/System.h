@@ -160,6 +160,7 @@ public:
     double rx;
     double ry;
     double rz;
+    double rw;
 
     // Local Mapper. It manages the local map and performs local bundle adjustment.
     LocalMapping* mpLocalMapper;
