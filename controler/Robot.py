@@ -6,7 +6,7 @@ class Robot:
     def __init__(self, host):
         self.host = host
         self.thrust = 1500
-        self.heading = 1500
+        self.heading = 1450
         requests.post(self.host + '/robot/session', json={})
 
     def left(self):

@@ -20,7 +20,7 @@ def draw(q):
         data_writer = csv.writer(raw_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         while True:
             if not q.empty():
-                [x0, y0, y_rot] = q.get()
+                [x0, y0, x_rot, y_rot, z_rot, w_rot] = q.get()
                 p = Point(x0, y0)
 
                 if len(waypoints) == 0:
