@@ -83,8 +83,8 @@ int main(int argc, char **argv)
 
     // initialize the camera capture
     cv::VideoCapture capture(cameraIndex);
-    cap.set(CV_CAP_PROP_FRAME_WIDTH,1280);
-    cap.set(CV_CAP_PROP_FRAME_HEIGHT,480);
+    capture.set(CV_CAP_PROP_FRAME_WIDTH,1280);
+    capture.set(CV_CAP_PROP_FRAME_HEIGHT,480);
     if(!capture.isOpened())
     {
         std::printf("Unable to open video source, terminating program! \n");
