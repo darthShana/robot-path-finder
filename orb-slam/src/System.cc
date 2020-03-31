@@ -472,9 +472,9 @@ void System::SaveKeyFrameTrajectoryTUM(const string &filename)
         vector<float> q = Converter::toQuaternion(R);
         cv::Mat t = pKF->GetCameraCenter();
 	    
-	x = twc.at<float>(0);
-	y = twc.at<float>(1);
-	z = twc.at<float>(2);
+	x = t.at<float>(0);
+	y = t.at<float>(1);
+	z = t.at<float>(2);
 	rx = q[0];
 	ry = q[1];
 	rz = q[2];
