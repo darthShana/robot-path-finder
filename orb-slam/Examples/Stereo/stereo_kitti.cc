@@ -24,6 +24,10 @@
 #include<fstream>
 #include<iomanip>
 #include<chrono>
+#include <string>
+#include <cstdio>
+#include <zmq.hpp>
+#include "opencv2/opencv.hpp"
 
 #include<opencv2/core/core.hpp>
 
@@ -67,6 +71,18 @@ int main(int argc, char **argv){
 
     // calibration and rectification of cameras (SLAM)
 
+    // initialize the zmq context and socket
+    zmq::context_t context(1);
+    zmq::socket_t socket(context, ZMQ_REQ);
+
+    // connect to the image server
+    std::printf("Connecting to server... \n");
+    socket.connect ("tcp://192.168.87.23:5555");
+
+    // create a request object
+    zmq::message_t request(5);
+    memcpy(request.data(), "Hello", 5);
+
     cv::FileStorage fsSettings(argv[2], cv::FileStorage::READ);
     if(!fsSettings.isOpened()){
         cerr << "ERROR: Wrong path to settings" << endl;
@@ -104,17 +120,6 @@ int main(int argc, char **argv){
     cv::initUndistortRectifyMap(K_r,D_r,R_r,P_r.rowRange(0,3).colRange(0,3),cv::Size(cols_r,rows_r),CV_32F,M1r,M2r);
 
 
-
-    // Intializing camera feed (SLAM)
-    cv::VideoCapture camera0(0);
-    if (!camera0.isOpened()) {
-        cerr << endl  <<"Could not open camera feed."  << endl;
-        return -1;
-    }
-
-
-
-
     // Create SLAM system. It initializes all system threads and gets ready to process frames. (SLAM)
     ORB_SLAM2::System SLAM(argv[1],argv[2],ORB_SLAM2::System::STEREO,true,(bool)atoi(argv[4]));
     //ORB_SLAM2::Tracking yolo (SLAM&);
@@ -136,7 +141,17 @@ int main(int argc, char **argv){
         cv::Mat imLeft, imRight, frame, imLeftRect, imRightRect;
 
         for(int timeStamps = 0; timeStamps < 600 ; timeStamps++) {
-            camera0 >> frame;
+
+            socket.send(request);
+
+            // get the reply
+            zmq::message_t reply;
+            socket.recv(&reply);
+            std::vector<uchar> buffer;
+
+            // store the reply data into an image structure
+            cv::Mat frame(240, 640, CV_8UC3, reply.data());
+
             imLeft = frame(cv::Rect(0, 0, frame.cols/2, frame.rows));
 
             imRight = frame(cv::Rect(frame.cols/2, 0, frame.cols / 2, frame.rows));

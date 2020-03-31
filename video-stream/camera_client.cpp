@@ -60,7 +60,7 @@ int main(int argc, char **argv)
 
     // connect to the image server
     std::printf("Connecting to server... \n");
-    socket.connect ("tcp://localhost:5555");
+    socket.connect ("tcp://192.168.87.23:5555");
 
     // create a request object
     zmq::message_t request(5);
@@ -79,7 +79,7 @@ int main(int argc, char **argv)
         std::vector<uchar> buffer;
 
         // store the reply data into an image structure
-        cv::Mat image(480, 640, CV_8UC3, reply.data());
+        cv::Mat image(480, 1280, CV_8UC3, reply.data());
 
         // display the result
         if(showFrames)

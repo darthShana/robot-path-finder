@@ -36,6 +36,16 @@ if(NOT OpenCV_FOUND)
    endif()
 endif()
 
+# set the zeromq directories
+message("Linux platform detected, setting ZeroMQ configuration manually...")
+find_path(ZeroMQ_ROOT_DIR NAMES include/zmq.h)
+find_library(ZeroMQ_LIBS NAMES zmq libzmq HINTS ${ZeroMQ_ROOT_DIR}/lib)
+find_path(ZeroMQ_INCLUDE_DIR NAMES zmq.h HINTS ${ZeroMQ_ROOT_DIR}/include)
+
+# set the include and link directories
+include_directories(${ZeroMQ_INCLUDE_DIR})
+link_directories(${ZeroMQ_LIB_DIR})
+
 find_package(Eigen3 3.1.0 REQUIRED)
 find_package(Pangolin REQUIRED)
 find_package(PahoMqttCpp REQUIRED)
@@ -107,7 +117,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Stereo)
 
 add_executable(stereo_kitti
 Examples/Stereo/stereo_kitti.cc)
-target_link_libraries(stereo_kitti ${PROJECT_NAME} paho-mqttpp3 paho-mqtt3as)
+target_link_libraries(stereo_kitti ${PROJECT_NAME} ${ZeroMQ_LIBS} paho-mqttpp3 paho-mqtt3as)
 
 add_executable(stereo_euroc
 Examples/Stereo/stereo_euroc.cc)
