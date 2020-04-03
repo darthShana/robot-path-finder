@@ -1,0 +1,6 @@
+Makefile
+CMakeFiles/
+CMakeCache.txt
+*.cmake
+camera_client
+camera_server

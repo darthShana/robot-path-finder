@@ -116,6 +116,7 @@ int main(int argc, char **argv){
     }
 
     cv::Mat M1l,M2l,M1r,M2r;
+    cv::Mat Tcw; // added to save realtime values
     cv::initUndistortRectifyMap(K_l,D_l,R_l,P_l.rowRange(0,3).colRange(0,3),cv::Size(cols_l,rows_l),CV_32F,M1l,M2l);
     cv::initUndistortRectifyMap(K_r,D_r,R_r,P_r.rowRange(0,3).colRange(0,3),cv::Size(cols_r,rows_r),CV_32F,M1r,M2r);
 
@@ -140,7 +141,7 @@ int main(int argc, char **argv){
 
         cv::Mat imLeft, imRight, frame, imLeftRect, imRightRect;
 
-        for(int timeStamps = 0; timeStamps < 600 ; timeStamps++) {
+        for(int timeStamps = 0; timeStamps < 6000 ; timeStamps++) {
 
             socket.send(request);
 
@@ -182,18 +183,20 @@ int main(int argc, char **argv){
             cv::rectangle(imRightRect, rect44, cv::Scalar(0, 0, 0),CV_FILLED);
 
             // Pass the images to the SLAM system (SLAM)
-            SLAM.TrackStereo(imLeftRect,imRightRect,timeStamps);
-            SLAM.SaveKeyFrameTrajectoryTUM("CameraTrajectory.txt");
+            Tcw = SLAM.TrackStereo(imLeftRect,imRightRect,timeStamps); // added to save realtime values
+            SLAM.SaveTrajectoryTUM("CameraTrajectory.txt");
 
+            cv::Mat Rwc = Tcw.rowRange(0,3).colRange(0,3).t(); // Rotation information // added to save realtime values
+            cv::Mat twc = -Rwc*Tcw.rowRange(0,3).col(3); // translation information // added to save realtime values
+            vector<float> q = ORB_SLAM2::Converter::toQuaternion(Rwc); // added to save realtime values
 
-            // Real-time values of position and orientation from SLAM (these values would be used in Path Planning in a closed feedback loop to see if our robot is moving in the right direction and orientation).
-            float disp_x = SLAM.x;   // detects if robot is moving in left or right in a straight direction
-            float disp_y = SLAM.y;	 // detects if robot is moving up or down in a striaght direction (not used in our case)
-            float disp_z = SLAM.z;   // detects if robot is moving straight or backawards in a straight direction
-            float rot_x = SLAM.rx;	// roll orientation (not used yet but can be used to detect uphill or downhill)
-            float rot_y = SLAM.ry;	// yaw orientation (tells us the angle at which robot turns left or right)
-            float rot_z = SLAM.rz;	// pitch orientation (not used yet but can be used to detect uphill or downhill)
-	        float rot_w = SLAM.rw;
+            float disp_x = twc.at<float>(0); // added to save realtime values
+            float disp_y = twc.at<float>(1); // added to save realtime values
+            float disp_z = twc.at<float>(2); // added to save realtime values
+            float rot_x = q[0]; // added to save realtime values
+            float rot_y = q[1]; // added to save realtime values
+            float rot_z = q[2]; // added to save realtime values
+            float rot_w = q[3]; // added to save realtime values
 
             string payload =
                 to_string(disp_x) + "," + to_string(disp_y) + "," + to_string(disp_z)+ "," +

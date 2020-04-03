@@ -79,7 +79,7 @@ int main(int argc, char **argv)
         std::vector<uchar> buffer;
 
         // store the reply data into an image structure
-        cv::Mat image(480, 1280, CV_8UC3, reply.data());
+        cv::Mat image(240, 640, CV_8UC3, reply.data());
 
         // display the result
         if(showFrames)
