@@ -429,13 +429,13 @@ void System::SaveTrajectoryTUM(const string &filename)
 
         vector<float> q = Converter::toQuaternion(Rwc);
         
-       // x = twc.at<float>(0);
-	//y = twc.at<float>(1);
-	//z = twc.at<float>(2);
-	//rx = q[0];
-	//ry = q[1];
-	//rz = q[2];
-	//rw = q[3];
+        x = twc.at<float>(0);
+	y = twc.at<float>(1);
+	z = twc.at<float>(2);
+	rx = q[0];
+	ry = q[1];
+	rz = q[2];
+	rw = q[3];
 
         f << setprecision(6) << *lT << " " <<  setprecision(9) << twc.at<float>(0) << " " << twc.at<float>(1) << " " << twc.at<float>(2) << " " << q[0] << " " << q[1] << " " << q[2] << " " << q[3] << endl;
     }
@@ -472,13 +472,13 @@ void System::SaveKeyFrameTrajectoryTUM(const string &filename)
         vector<float> q = Converter::toQuaternion(R);
         cv::Mat t = pKF->GetCameraCenter();
 	    
-	x = t.at<float>(0);
-	y = t.at<float>(1);
-	z = t.at<float>(2);
-	rx = q[0];
-	ry = q[1];
-	rz = q[2];
-	rw = q[3];    
+	//x = t.at<float>(0);
+	//y = t.at<float>(1);
+	//z = t.at<float>(2);
+	//rx = q[0];
+	//ry = q[1];
+	//rz = q[2];
+	//rw = q[3];    
 	    
         f << setprecision(6) << pKF->mTimeStamp << setprecision(7) << " " << t.at<float>(0) << " " << t.at<float>(1) << " " << t.at<float>(2)
           << " " << q[0] << " " << q[1] << " " << q[2] << " " << q[3] << endl;
