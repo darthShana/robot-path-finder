@@ -137,6 +137,6 @@ plt.pause(0.05)
 q = Queue()
 x = threading.Thread(target=listen, args=(q,))
 x.start()
-robot = Robot('http://192.168.87.23:5000')
+robot = Robot('http://localhost:5000')
 
 follow(q, waypoints, robot)
