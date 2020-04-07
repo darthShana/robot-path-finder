@@ -15,16 +15,16 @@ class ORBMQTTSubscriber(mqtt.Client):
     def on_message(self, mqttc, obj, msg):
         full_str = msg.payload.decode().split(",")
         x0 = float(full_str[0])
+        y0 = float(full_str[0])
         z0 = float(full_str[2])
         x_rot = float(full_str[3])
         y_rot = float(full_str[4])
         z_rot = float(full_str[5])
         w_rot = float(full_str[6])
 
-        if abs(self.x - x0) > 0.005 or abs(self.z - z0) > 0.005:
-            self.q.put([x0, z0, x_rot, y_rot, z_rot, w_rot])
-            self.x = x0
-            self.z = z0
+        self.q.put([x0, y0, z0, x_rot, y_rot, z_rot, w_rot])
+        self.x = x0
+        self.z = z0
 
     def on_publish(self, mqttc, obj, mid):
         pass
