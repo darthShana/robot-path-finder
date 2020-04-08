@@ -72,7 +72,8 @@ def follow(q, way_points, robot):
 
                     last_orientation = current_orientation
 
-                if distance < 0.02:
+                print('current frame distance:'+str(distance))
+                if distance < 0.05:
                     print("accelerating")
                     robot.accelerate()
                 elif distance > 0.2:
