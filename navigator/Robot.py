@@ -47,7 +47,7 @@ class Robot:
 
     def accelerate(self):
         if self.thrust > 1000:
-            self.thrust -= 50
+            self.thrust -= 5
         requests.post(self.host + '/robot/commands', json={
             'thrust': self.thrust,
             'heading': self.heading
@@ -55,7 +55,7 @@ class Robot:
 
     def decelerate(self):
         if self.thrust < 2000:
-            self.thrust += 50
+            self.thrust += 5
         requests.post(self.host + '/robot/commands', json={
             'thrust': self.thrust,
             'heading': self.heading
