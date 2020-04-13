@@ -6,8 +6,8 @@ class Robot:
     def __init__(self, host):
         self.host = host
         self.heading = 1500
-        self.turing_thrust = 1250
-        self.straight_thrust = 1400
+        self.turing_thrust = 1350
+        self.straight_thrust = 1450
         self.stop_thrust = 1500
         self.thrust = 1500
         requests.post(self.host + '/robot/session', json={})

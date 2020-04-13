@@ -23,12 +23,10 @@ def follow(q, way_points, robot):
                 [x0, y0, z0, x_rot, y_rot, z_rot, w_rot] = q.get()
 
                 current_location = Point(x0, z0)
+                point_frame.append(current_location)
 
-                if len(point_frame) < 20:
-                    point_frame.append(current_location)
-
-                while len(point_frame) > 2 and current_location.distance(point_frame[0]) > 0.1:
-                    point_frame.pop(0)
+                if len(point_frame) > 6:
+                    point_frame = point_frame[-6:]
 
                 xs = np.array(list(map(lambda p: p.x, point_frame))).reshape((-1, 1))
                 ys = np.array(list(map(lambda p: p.y, point_frame)))
