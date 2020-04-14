@@ -6,8 +6,6 @@ class Robot:
     def __init__(self, host):
         self.host = host
         self.heading = 1500
-        self.turing_thrust = 1300
-        self.straight_thrust = 1450
         self.stop_thrust = 1500
         self.thrust = 1500
         requests.post(self.host + '/robot/session', json={})
@@ -17,7 +15,6 @@ class Robot:
             self.heading = 1500
         if self.heading < 2000:
             self.heading += 50
-        self.thrust = self.straight_thrust
 
         requests.post(self.host + '/robot/commands', json={
             'thrust': self.thrust,
@@ -29,7 +26,6 @@ class Robot:
             self.heading = 1500
         if self.heading > 1000:
             self.heading -= 50
-        self.thrust = self.turing_thrust
 
         requests.post(self.host + '/robot/commands', json={
             'thrust': self.thrust,
@@ -38,7 +34,6 @@ class Robot:
 
     def straight(self):
         self.heading = 1500
-        self.thrust = self.straight_thrust
 
         requests.post(self.host + '/robot/commands', json={
             'thrust': self.thrust,
