@@ -57,6 +57,7 @@ def follow(q, way_points, robot):
                         robot.stop()
 
                 angle_change = current_orientation.angle_between(last_orientation)
+                print('angle change:'+str(angle_change))
 
                 if angle_change > np.pi/32:
                     smallest_angle = Vector(current_location, current_waypoint).clockwise_angle_between(current_orientation)

@@ -16,7 +16,7 @@ class Robot:
         if self.heading < 1500:
             self.heading = 1500
         if self.heading < 2000:
-            self.heading += 100
+            self.heading += 50
         self.thrust = self.straight_thrust
 
         requests.post(self.host + '/robot/commands', json={
@@ -28,7 +28,7 @@ class Robot:
         if self.heading > 1500:
             self.heading = 1500
         if self.heading > 1000:
-            self.heading -= 100
+            self.heading -= 50
         self.thrust = self.turing_thrust
 
         requests.post(self.host + '/robot/commands', json={
