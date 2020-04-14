@@ -32,8 +32,13 @@ def follow(q, way_points, robot):
                 ys = np.array(list(map(lambda p: p.y, point_frame)))
                 model = LinearRegression().fit(xs, ys)
                 y_pred = model.predict(xs)
-                current_orientation = Vector(Point(point_frame[0].x, y_pred[0]), Point(point_frame[-1].x, y_pred[-1]))
-                distance = point_frame[0].distance(point_frame[-1])
+                p1 = Point(point_frame[0].x, y_pred[0])
+                p2 = Point(point_frame[-1].x, y_pred[-1])
+                current_orientation = Vector(p1, p2)
+                distance = p1.distance(p2)
+
+                print('current pint frame:'+str(len(point_frame)))
+                print('current frame distance:'+str(distance))
 
                 # plt.quiver(x0, z0, current_orientation.vector[0], current_orientation.vector[1])
                 plt.plot(x0, z0, 'bo', markersize=1)
@@ -44,6 +49,7 @@ def follow(q, way_points, robot):
 
                 current_waypoint = Point(way_points[0][0], way_points[0][1])
 
+                print('distance to waypoint'+str(current_location.distance(current_waypoint)))
                 if current_location.distance(current_waypoint) < 0.05:
                     way_points = way_points[1:]
                     print('waypoint reached:'+str(current_waypoint))
@@ -70,7 +76,6 @@ def follow(q, way_points, robot):
 
                     last_orientation = current_orientation
 
-                print('current frame distance:'+str(distance))
                 if distance < 0.05:
                     print("accelerating")
                     robot.accelerate()
