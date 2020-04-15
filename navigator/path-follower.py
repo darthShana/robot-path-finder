@@ -71,10 +71,10 @@ def follow(q, way_points, robot):
                     robot.straight()
                     print('going forward')
 
-                if distance < 0.05:
+                if distance < 0.01:
                     print("accelerating")
                     robot.accelerate()
-                elif distance > 0.1:
+                elif distance > 0.05:
                     print("decelerating")
                     robot.decelerate()
 
