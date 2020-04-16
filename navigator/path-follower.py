@@ -5,7 +5,7 @@ from mqtt.ORBMQTTSubscriber import ORBMQTTSubscriber
 import threading
 import numpy as np
 
-from multiprocessing import Queue
+import queue
 from geometry.Point import Point
 from geometry.Vector import Vector
 from sklearn.linear_model import LinearRegression
@@ -20,6 +20,9 @@ def follow(q, way_points, robot):
         while True:
             if not q.empty():
                 [x0, y0, z0, x_rot, y_rot, z_rot, w_rot] = q.get()
+
+                with q.mutex:
+                    q.queue.clear()
 
                 current_location = Point(x0, z0)
                 point_frame.append(current_location)
@@ -133,7 +136,7 @@ plt.gca().set_aspect('equal', adjustable='box')
 plt.scatter(x, y, marker='+')
 plt.pause(0.05)
 
-q = Queue()
+q = queue.LifoQueue()
 x = threading.Thread(target=listen, args=(q,))
 x.start()
 robot = Robot('http://localhost:5000')
