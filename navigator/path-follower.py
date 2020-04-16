@@ -25,6 +25,7 @@ def follow(q, way_points, robot):
                     q.queue.clear()
 
                 current_location = Point(x0, z0)
+                print('current pos:'+str(current_location))
                 point_frame.append(current_location)
 
                 if len(point_frame) > 6:
@@ -39,8 +40,7 @@ def follow(q, way_points, robot):
                 current_orientation = Vector(p1, p2)
                 distance = p1.distance(p2)
 
-                print('current pint frame:'+str(len(point_frame)))
-                print('current frame distance:'+str(distance))
+                print('current speed:'+str(distance))
 
                 # plt.quiver(x0, z0, current_orientation.vector[0], current_orientation.vector[1])
                 plt.plot(x0, z0, 'bo', markersize=1)
