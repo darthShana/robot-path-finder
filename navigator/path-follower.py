@@ -59,16 +59,15 @@ def follow(q, way_points, robot):
                         robot.stop()
 
                 if current_orientation.angle_between(last_orientation) > np.pi/16:
-                    smallest_angle = Vector(current_location, current_waypoint).clockwise_angle_between(current_orientation)
-                    angle_between = Vector(current_location, current_waypoint).clockwise_angle_between(current_orientation)
+                    clockwise_angle = Vector(current_location, current_waypoint).clockwise_angle_between(current_orientation)
                     print(str(current_location)+', '+str(current_orientation) + ' ,'+str(Vector(current_location, current_waypoint)))
 
-                    if smallest_angle > np.pi/16:
-                        if angle_between > np.pi:
-                            robot.right()
+                    if clockwise_angle > np.pi/16:
+                        if clockwise_angle > np.pi:
+                            robot.right((2*np.pi) - clockwise_angle)
                             print('turning right')
                         else:
-                            robot.left()
+                            robot.left(clockwise_angle)
                             print('turning left')
                     else:
                         robot.straight()

@@ -1,4 +1,5 @@
 import requests
+import numpy as np
 
 
 class Robot:
@@ -10,22 +11,22 @@ class Robot:
         self.thrust = 1500
         requests.post(self.host + '/robot/session', json={})
 
-    def left(self):
-        if self.heading < 1500:
-            self.heading = 1500
-        if self.heading < 2000:
-            self.heading += 50
+    def left(self, angle):
+        if angle > np.pi/4:
+            angle = np.pi/4
+
+        self.heading = 1500 + (angle*4*500/np.pi)
 
         requests.post(self.host + '/robot/commands', json={
             'thrust': self.thrust,
             'heading': self.heading
         })
 
-    def right(self):
-        if self.heading > 1500:
-            self.heading = 1500
-        if self.heading > 1000:
-            self.heading -= 50
+    def right(self, angle):
+        if angle > np.pi/4:
+            angle = np.pi/4
+
+        self.heading = 1500 - (angle*4*500/np.pi)
 
         requests.post(self.host + '/robot/commands', json={
             'thrust': self.thrust,
