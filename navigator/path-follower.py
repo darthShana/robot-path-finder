@@ -15,6 +15,7 @@ from Robot import Robot
 def follow(q, way_points, robot):
 
     point_frame = []
+    last_orientation = Vector(Point(0, 0), Point(0, 1))
 
     try:
         while True:
@@ -25,7 +26,6 @@ def follow(q, way_points, robot):
                     q.queue.clear()
 
                 current_location = Point(x0, z0)
-                print('current pos:'+str(current_location))
                 point_frame.append(current_location)
 
                 if len(point_frame) > 6:
@@ -58,21 +58,22 @@ def follow(q, way_points, robot):
                     if len(waypoints) == 1:
                         robot.stop()
 
-                smallest_angle = Vector(current_location, current_waypoint).clockwise_angle_between(current_orientation)
-                angle_between = Vector(current_location, current_waypoint).clockwise_angle_between(current_orientation)
-                print('current heading:'+str(current_orientation) + ' required heading:'+str(Vector(current_location, current_waypoint)))
-                print('angle diff:'+str(smallest_angle))
+                if current_orientation.angle_between(last_orientation) > np.pi/16:
+                    smallest_angle = Vector(current_location, current_waypoint).clockwise_angle_between(current_orientation)
+                    angle_between = Vector(current_location, current_waypoint).clockwise_angle_between(current_orientation)
+                    print(str(current_location)+', '+str(current_orientation) + ' ,'+str(Vector(current_location, current_waypoint)))
 
-                if smallest_angle > np.pi/16:
-                    if angle_between > np.pi:
-                        robot.right()
-                        print('turning right')
+                    if smallest_angle > np.pi/16:
+                        if angle_between > np.pi:
+                            robot.right()
+                            print('turning right')
+                        else:
+                            robot.left()
+                            print('turning left')
                     else:
-                        robot.left()
-                        print('turning left')
-                else:
-                    robot.straight()
-                    print('going forward')
+                        robot.straight()
+                        print('going forward')
+                    last_orientation = current_orientation
 
                 if distance < 0.01:
                     print("accelerating")
