@@ -16,6 +16,7 @@ def follow(q, way_points, robot):
 
     point_frame = []
     last_orientation = Vector(Point(0, 0), Point(0, 1))
+    last_location = Point(0, 0)
 
     try:
         while True:
@@ -39,6 +40,10 @@ def follow(q, way_points, robot):
                 p2 = Point(point_frame[-1].x, y_pred[-1])
                 current_orientation = Vector(p1, p2)
                 distance = p1.distance(p2)
+
+                if distance < 0.005:
+                    current_orientation = Vector(last_location, current_location)
+                    print('low velocity, using pos heading')
 
                 print('current speed:'+str(distance))
 
@@ -80,6 +85,9 @@ def follow(q, way_points, robot):
                 elif distance > 0.05:
                     print("decelerating")
                     robot.decelerate()
+
+                if current_location.distance(last_location) > 0.005:
+                    last_location = current_location
 
     except KeyboardInterrupt:
         robot.stop()
