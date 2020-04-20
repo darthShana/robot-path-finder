@@ -36,7 +36,7 @@ def follow(q, way_points, robot):
                 ys = np.array(list(map(lambda p: p.y, point_frame)))
                 model = LinearRegression().fit(xs, ys)
                 r_sq = model.score(xs, ys)
-                print('r_sq:'+r_sq)
+                print('r_sq:'+str(r_sq))
 
                 if r_sq < 0.1:
                     y_pred = model.predict(xs)
