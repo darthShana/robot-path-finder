@@ -16,7 +16,7 @@ def follow(q, way_points, robot):
 
     point_frame = []
     last_orientation = Vector(Point(0, 0), Point(0, 1))
-    last_location = Point(0, 0)
+    last_location = Point(0, -0.1)
 
     try:
         while True:
