@@ -66,10 +66,11 @@ def follow(q, way_points, robot):
                     if len(waypoints) == 1:
                         robot.stop()
 
-                angle_between = current_orientation.angle_between(last_orientation)
-                if angle_between > np.pi/32:
+                angle_change = current_orientation.angle_between(last_orientation)
+                if angle_change > np.pi/32:
                     print(str(current_location)+', '+str(current_orientation) + ' ,'+str(Vector(current_location, current_waypoint)))
-
+                    angle_between = current_orientation.angle_between(Vector(current_location, current_waypoint))
+                    
                     if angle_between > np.pi/16:
                         clockwise_angle = Vector(current_location, current_waypoint).clockwise_angle_between(current_orientation)
                         if clockwise_angle > np.pi:
