@@ -16,6 +16,7 @@ def follow(q, way_points, robot):
 
     point_frame = []
     last_orientation = Vector(Point(0, 0), Point(0, 1))
+    last_location = Point(0, 0)
 
     try:
         while True:
@@ -34,6 +35,9 @@ def follow(q, way_points, robot):
                 xs = np.array(list(map(lambda p: p.x, point_frame))).reshape((-1, 1))
                 ys = np.array(list(map(lambda p: p.y, point_frame)))
                 model = LinearRegression().fit(xs, ys)
+                r_sq = model.score(xs, ys)
+                print('heading score:'+str(r_sq))
+
                 y_pred = model.predict(xs)
                 p1 = Point(point_frame[0].x, y_pred[0])
                 p2 = Point(point_frame[-1].x, y_pred[-1])
@@ -57,11 +61,12 @@ def follow(q, way_points, robot):
                     if len(waypoints) == 1:
                         robot.stop()
 
-                if current_orientation.angle_between(last_orientation) > np.pi/32:
-                    clockwise_angle = Vector(current_location, current_waypoint).clockwise_angle_between(current_orientation)
+                angle_between = current_orientation.angle_between(last_orientation)
+                if angle_between > np.pi/32:
                     print(str(current_location)+', '+str(current_orientation) + ' ,'+str(Vector(current_location, current_waypoint)))
 
-                    if clockwise_angle > np.pi/16:
+                    if angle_between > np.pi/16:
+                        clockwise_angle = Vector(current_location, current_waypoint).clockwise_angle_between(current_orientation)
                         if clockwise_angle > np.pi:
                             robot.right((2*np.pi) - clockwise_angle)
                             print('turning right')
@@ -79,6 +84,9 @@ def follow(q, way_points, robot):
                 elif distance > 0.05:
                     print("decelerating")
                     robot.decelerate()
+
+                if current_location.distance(last_location) > 0.05:
+                    last_location = current_location
 
     except KeyboardInterrupt:
         robot.stop()

@@ -1,6 +1,6 @@
-from numpy import (dot, arccos, clip, arctan2, pi)
+from numpy import (dot, arccos, clip, arctan2, pi, linalg)
 from numpy.linalg import norm
-import math
+
 
 class Vector:
 
@@ -15,6 +15,9 @@ class Vector:
         ang1 = arctan2(*self.vector[::-1])
         ang2 = arctan2(*other.vector[::-1])
         return (ang1 - ang2) % (2 * pi)
+
+    def normalise(self):
+        return self.vector / linalg.norm(self.vector)
 
     def __repr__(self):
         return str(self.vector)
