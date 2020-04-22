@@ -36,7 +36,7 @@ class ORBMQTTSubscriber(mqtt.Client):
         pass
 
     def run(self):
-        self.connect("192.168.87.250", 1883, 60)
+        self.connect("192.168.87.214", 1883, 60)
         self.subscribe("robot/sensors/orbslam", 0)
 
         rc = 0

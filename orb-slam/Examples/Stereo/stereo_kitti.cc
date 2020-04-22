@@ -39,7 +39,7 @@
 using namespace std;
 using namespace std::chrono;
 
-const std::string address { "tcp://192.168.87.250:1883" };
+const std::string address { "tcp://192.168.87.214:1883" };
 
 const string TOPIC { "robot/sensors/orbslam" };
 const int	 QOS = 1;
