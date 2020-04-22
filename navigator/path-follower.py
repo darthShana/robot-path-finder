@@ -38,7 +38,7 @@ def follow(q, way_points, robot):
                 r_sq = model.score(xs, ys)
                 print('r_sq:'+str(r_sq))
 
-                if r_sq > 0.1:
+                if r_sq > 0.5:
                     y_pred = model.predict(xs)
                     p1 = Point(point_frame[0].x, y_pred[0])
                     p2 = Point(point_frame[-1].x, y_pred[-1])

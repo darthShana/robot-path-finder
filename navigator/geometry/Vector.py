@@ -20,4 +20,4 @@ class Vector:
         return self.vector / linalg.norm(self.vector)
 
     def __repr__(self):
-        return str(self.vector)
+        return str(self.vector[0])+', '+ str(self.vector[1])
