@@ -50,7 +50,7 @@ def follow(q, way_points, robot):
 
                 speed = last_location.distance(current_location)/(time.time()-last_location_time)
                 print('current speed:'+str(speed))
-                
+
                 # plt.quiver(x0, z0, current_orientation.vector[0], current_orientation.vector[1])
                 plt.plot(x0, z0, 'bo', markersize=1)
                 plt.pause(0.05)
@@ -82,10 +82,10 @@ def follow(q, way_points, robot):
                     robot.straight()
                     print('going forward')
 
-                if speed < 0.01:
+                if speed < 0.1:
                     print("accelerating")
                     robot.accelerate()
-                elif speed > 0.03:
+                elif speed > 0.3:
                     print("decelerating")
                     robot.decelerate()
 
