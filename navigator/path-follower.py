@@ -66,23 +66,21 @@ def follow(q, way_points, robot):
                     if len(waypoints) == 1:
                         robot.stop()
 
-                angle_change = current_orientation.angle_between(last_orientation)
-                if angle_change > np.pi/64:
-                    print(str(current_location)+', '+str(current_orientation) + ' ,'+str(Vector(current_location, current_waypoint)))
-                    angle_between = current_orientation.angle_between(Vector(current_location, current_waypoint))
+                print('['+str(current_location)+', '+str(current_orientation) + ' ,'+str(Vector(current_location, current_waypoint))+'],')
+                angle_between = current_orientation.angle_between(Vector(current_location, current_waypoint))
 
-                    if angle_between > np.pi/32:
-                        clockwise_angle = Vector(current_location, current_waypoint).clockwise_angle_between(current_orientation)
-                        if clockwise_angle > np.pi:
-                            robot.right((2*np.pi) - clockwise_angle)
-                            print('turning right')
-                        else:
-                            robot.left(clockwise_angle)
-                            print('turning left')
+                if angle_between > np.pi/32:
+                    clockwise_angle = Vector(current_location, current_waypoint).clockwise_angle_between(current_orientation)
+                    if clockwise_angle > np.pi:
+                        robot.right((2*np.pi) - clockwise_angle)
+                        print('turning right')
                     else:
-                        robot.straight()
-                        print('going forward')
-                    last_orientation = current_orientation
+                        robot.left(clockwise_angle)
+                        print('turning left')
+                else:
+                    robot.straight()
+                    print('going forward')
+                last_orientation = current_orientation
 
                 if distance < 0.01:
                     print("accelerating")

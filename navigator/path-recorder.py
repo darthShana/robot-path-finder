@@ -25,7 +25,7 @@ def draw(q):
                 # plt.plot(p.x, p.y, 'bo', markersize=1)
                 # plt.pause(0.05)
                 waypoints.append(p)
-            elif waypoints[-1].distance(p) > 0.1:
+            elif waypoints[-1].distance(p) > 0.3:
                 if len(waypoints) > 1:
                     if Vector(waypoints[-2], waypoints[-1]).angle_between(Vector(waypoints[-1], p)) > np.pi/16:
                         waypoints.append(p)
