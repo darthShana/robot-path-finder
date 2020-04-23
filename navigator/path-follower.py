@@ -6,6 +6,7 @@ import threading
 import numpy as np
 
 import queue
+import time
 from geometry.Point import Point
 from geometry.Vector import Vector
 from sklearn.linear_model import LinearRegression
@@ -16,6 +17,7 @@ def follow(q, way_points, robot):
 
     point_frame = []
     last_location = Point(0, -0.1)
+    last_location_time = time.time()
 
     try:
         while True:
@@ -42,13 +44,13 @@ def follow(q, way_points, robot):
                     p1 = Point(point_frame[0].x, y_pred[0])
                     p2 = Point(point_frame[-1].x, y_pred[-1])
                     current_orientation = Vector(p1, p2)
-                    distance = p1.distance(p2)
-                    print('current speed:'+str(distance))
+
                 else:
                     current_orientation = Vector(last_location, current_location)
-                    distance = 0.009
-                    print('speed to too slow')
 
+                speed = last_location.distance(current_location)/(time.time()-last_location_time)
+                print('current speed:'+str(speed))
+                
                 # plt.quiver(x0, z0, current_orientation.vector[0], current_orientation.vector[1])
                 plt.plot(x0, z0, 'bo', markersize=1)
                 plt.pause(0.05)
@@ -80,15 +82,16 @@ def follow(q, way_points, robot):
                     robot.straight()
                     print('going forward')
 
-                if distance < 0.01:
+                if speed < 0.01:
                     print("accelerating")
                     robot.accelerate()
-                elif distance > 0.03:
+                elif speed > 0.03:
                     print("decelerating")
                     robot.decelerate()
 
                 if current_location.distance(last_location) > 0.05:
                     last_location = current_location
+                    last_location_time = time.time()
 
     except KeyboardInterrupt:
         robot.stop()
