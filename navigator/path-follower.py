@@ -65,6 +65,7 @@ def follow(q, way_points, robot):
                     if len(waypoints) == 1:
                         print("destination reached")
                         robot.stop()
+                        continue
 
                 print('['+str(current_location)+', '+str(current_orientation) + ' ,'+str(Vector(current_location, current_waypoint))+'],')
                 angle_between = current_orientation.angle_between(Vector(current_location, current_waypoint))
