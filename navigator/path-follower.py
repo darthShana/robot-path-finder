@@ -53,7 +53,7 @@ def follow(q, way_points, robot):
                 plt.pause(0.05)
 
                 if len(way_points) == 0:
-
+                    print('['+str(current_location)+', '+str(current_orientation) + ' ,'+str(Vector(current_location, current_location))+'],')
                     continue
 
                 current_waypoint = Point(way_points[0][0], way_points[0][1])
