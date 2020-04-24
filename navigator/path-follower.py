@@ -53,15 +53,17 @@ def follow(q, way_points, robot):
                 plt.pause(0.05)
 
                 if len(way_points) == 0:
+
                     continue
 
                 current_waypoint = Point(way_points[0][0], way_points[0][1])
 
                 print('distance to waypoint'+str(current_location.distance(current_waypoint)))
-                if current_location.distance(current_waypoint) < 0.07:
+                if current_location.distance(current_waypoint) < 0.05:
                     way_points = way_points[1:]
                     print('waypoint reached:'+str(current_waypoint))
                     if len(waypoints) == 1:
+                        print("destination reached")
                         robot.stop()
 
                 print('['+str(current_location)+', '+str(current_orientation) + ' ,'+str(Vector(current_location, current_waypoint))+'],')
@@ -101,10 +103,10 @@ waypoints = np.array([
     # [0.000156,0.00035],
     # [0.142775,0.266247],
     # [0.221315,0.558516],
-    [0.464738, 1.03659],
+    [0.464738, 1.03659]
     # [0.744505,1.166092],
     # [1.056679,1.139396],
-    [1.327786, 1.003449]
+    # [1.327786, 1.003449]
     # [2.755482,-0.120892],
     # [2.740217,-0.423676],
     # [2.855406,-0.905568],
