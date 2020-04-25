@@ -59,7 +59,7 @@ def follow(q, way_points, robot):
                 current_waypoint = Point(way_points[0][0], way_points[0][1])
 
                 print('distance to waypoint'+str(current_location.distance(current_waypoint)))
-                if current_location.distance(current_waypoint) < 0.05:
+                if current_location.distance(current_waypoint) < 0.1:
                     way_points = way_points[1:]
                     print('waypoint reached:'+str(current_waypoint))
                     if len(waypoints) == 1:
