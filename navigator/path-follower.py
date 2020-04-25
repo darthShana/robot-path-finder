@@ -39,11 +39,11 @@ def follow(q, way_points, robot):
                 p2 = Point(point_frame[-1].x, y_pred[-1])
                 distance = p1.distance(p2)
 
-                if distance > 0.09:
+                if distance > 0.01:
                     current_orientation = Vector(p1, p2)
                     print('current speed:'+str(distance))
                 else:
-                    print('speed too low for heading')
+                    print('speed too low for heading:'+str(distance))
 
                 # plt.quiver(x0, z0, current_orientation.vector[0], current_orientation.vector[1])
                 plt.plot(x0, z0, 'bo', markersize=1)
