@@ -15,7 +15,7 @@ class Robot:
         if angle > np.pi/4:
             angle = np.pi/4
 
-        self.heading = 1500 + (angle*4*500/np.pi)
+        self.heading = round(1500 + (angle*4*500/np.pi))
         print('thrust:'+str(self.thrust)+' heading:'+str(self.heading))
 
         requests.post(self.host + '/robot/commands', json={
@@ -27,7 +27,7 @@ class Robot:
         if angle > np.pi/4:
             angle = np.pi/4
 
-        self.heading = 1500 - (angle*4*500/np.pi)
+        self.heading = round(1500 - (angle*4*500/np.pi))
         print('thrust:'+str(self.thrust)+' heading:'+str(self.heading))
 
         requests.post(self.host + '/robot/commands', json={

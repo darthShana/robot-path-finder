@@ -85,7 +85,7 @@ def follow(q, way_points, robot):
                 if speed < 0.03:
                     print("accelerating")
                     robot.accelerate()
-                elif speed > 0.05:
+                elif speed > 0.1:
                     print("decelerating")
                     robot.decelerate()
 
