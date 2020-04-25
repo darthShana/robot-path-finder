@@ -34,19 +34,16 @@ def follow(q, way_points, robot):
                 xs = np.array(list(map(lambda p: p.x, point_frame))).reshape((-1, 1))
                 ys = np.array(list(map(lambda p: p.y, point_frame)))
                 model = LinearRegression().fit(xs, ys)
-                r_sq = model.score(xs, ys)
-                print('r_sq:'+str(r_sq))
+                y_pred = model.predict(xs)
+                p1 = Point(point_frame[0].x, y_pred[0])
+                p2 = Point(point_frame[-1].x, y_pred[-1])
+                distance = p1.distance(p2)
 
-                if r_sq > 0.5:
-                    y_pred = model.predict(xs)
-                    p1 = Point(point_frame[0].x, y_pred[0])
-                    p2 = Point(point_frame[-1].x, y_pred[-1])
+                if distance > 0.09:
                     current_orientation = Vector(p1, p2)
-                    distance = p1.distance(p2)
                     print('current speed:'+str(distance))
                 else:
-                    distance = 0
-                    print('speed to too slow')
+                    print('speed too low for heading')
 
                 # plt.quiver(x0, z0, current_orientation.vector[0], current_orientation.vector[1])
                 plt.plot(x0, z0, 'bo', markersize=1)

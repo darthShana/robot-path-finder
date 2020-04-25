@@ -242,6 +242,12 @@ v2 = Vector(Point(0,0), Point(0.079737, -0.130236))
 print(v1.clockwise_angle_between(v2))
 print(v1.clockwise_angle_between(v2) > np.pi)
 
+p1 = Point(0.091812, 0.03647197234736366)
+p2 = Point(-0.00042799999999998395, -0.000600009779178956)
+
+print(Point(0, 0).distance(p1))
+print(Point(0, 0).distance(p2))
+
 x, y, hx, hy, rx, ry = real_set.T
 plt.quiver(x, y, hx, hy, color='b')
 plt.quiver(x, y, rx, ry, color='r')
