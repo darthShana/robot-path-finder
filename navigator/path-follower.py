@@ -40,7 +40,7 @@ def follow(q, way_points, robot):
                 p2 = Point(point_frame[-1].x, y_pred[-1])
                 distance = p1.distance(p2)
 
-                if distance > 0.03:
+                if distance > 0.01:
                     current_orientation = Vector(p1, p2)
                     print('current speed:'+str(distance))
                 else:
@@ -86,6 +86,7 @@ def follow(q, way_points, robot):
                 elif distance > 0.05:
                     print("decelerating")
                     robot.decelerate()
+
 
 
     except KeyboardInterrupt:
