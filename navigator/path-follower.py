@@ -16,6 +16,7 @@ def follow(q, way_points, robot):
 
     point_frame = []
     current_orientation = Vector(Point(0, 0), Point(0, 1))
+    robot.straight()
 
     try:
         while True:
