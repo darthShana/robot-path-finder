@@ -15,6 +15,7 @@ from Robot import Robot
 def follow(q, way_points, robot):
 
     point_frame = []
+    last_location = Point(0, 0)
     current_orientation = Vector(Point(0, 0), Point(0, 1))
     robot.straight()
 
@@ -38,13 +39,14 @@ def follow(q, way_points, robot):
                 y_pred = model.predict(xs)
                 p1 = Point(point_frame[0].x, y_pred[0])
                 p2 = Point(point_frame[-1].x, y_pred[-1])
-                distance = p1.distance(p2)
+                speed = p1.distance(p2)
 
-                if distance > 0.01:
+                if speed > 0.03:
                     current_orientation = Vector(p1, p2)
-                    print('current speed:'+str(distance))
+                    print('current speed:'+str(speed))
                 else:
-                    print('speed too low for heading:'+str(distance))
+                    current_orientation = Vector(last_location, current_location)
+                    print('speed too low for heading:'+str(speed))
 
                 # plt.quiver(x0, z0, current_orientation.vector[0], current_orientation.vector[1])
                 plt.plot(x0, z0, 'bo', markersize=1)
@@ -80,12 +82,15 @@ def follow(q, way_points, robot):
                     robot.straight()
                     print('going forward')
 
-                if distance < 0.03:
+                if speed < 0.03:
                     print("accelerating")
                     robot.accelerate()
-                elif distance > 0.05:
+                elif speed > 0.05:
                     print("decelerating")
                     robot.decelerate()
+
+                if current_location.distance(last_location) > 0.05:
+                    last_location = current_location
 
 
 
@@ -109,16 +114,16 @@ waypoints = np.array([
     [1.571818,1.686709],
     [1.848657,1.567276],
     [4.083863,0.020822],
-    [3.803652,-0.120183],
-    [3.502052,-0.121533],
-    [2.502722,0.07397],
-    [-0.011644,0.010546],
-    [0.044619,0.306758],
-    [0.173498,0.622892],
-    [0.233017,0.939582],
-    [0.134243,1.248281],
-    [-0.05364,1.490692],
-    [-0.301321,1.687501]
+    [3.803652,-0.120183]
+    # [3.502052,-0.121533],
+    # [2.502722,0.07397],
+    # [-0.011644,0.010546],
+    # [0.044619,0.306758],
+    # [0.173498,0.622892],
+    # [0.233017,0.939582],
+    # [0.134243,1.248281],
+    # [-0.05364,1.490692],
+    # [-0.301321,1.687501]
 ])
 
 x, y = waypoints.T
