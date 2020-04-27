@@ -44,8 +44,8 @@ class Robot:
         })
 
     def accelerate(self):
-        if self.thrust > 1400:
-            self.thrust -= 5
+        if self.thrust > 1300:
+            self.thrust -= 10
 
         print('thrust:'+str(self.thrust)+' heading:'+str(self.heading))
 
@@ -56,7 +56,7 @@ class Robot:
 
     def decelerate(self):
         if self.thrust < 1500:
-            self.thrust += 5
+            self.thrust += 10
 
         print('thrust:'+str(self.thrust)+' heading:'+str(self.heading))
 
