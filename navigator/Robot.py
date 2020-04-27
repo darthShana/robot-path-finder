@@ -6,7 +6,7 @@ class Robot:
 
     def __init__(self, host):
         self.host = host
-        self.heading = 1500
+        self.heading = 1550
         self.stop_thrust = 1500
         self.thrust = 1500
         requests.post(self.host + '/robot/session', json={})
@@ -15,7 +15,7 @@ class Robot:
         if angle > np.pi/4:
             angle = np.pi/4
 
-        self.heading = round(1500 + (angle*4*500/np.pi))
+        self.heading = round(1550 + (angle*4*600/np.pi))
         print('thrust:'+str(self.thrust)+' heading:'+str(self.heading))
 
         requests.post(self.host + '/robot/commands', json={
@@ -27,7 +27,7 @@ class Robot:
         if angle > np.pi/4:
             angle = np.pi/4
 
-        self.heading = round(1500 - (angle*4*500/np.pi))
+        self.heading = round(1550 - (angle*4*600/np.pi))
         print('thrust:'+str(self.thrust)+' heading:'+str(self.heading))
 
         requests.post(self.host + '/robot/commands', json={
@@ -36,7 +36,7 @@ class Robot:
         })
 
     def straight(self):
-        self.heading = 1500
+        self.heading = 1550
 
         requests.post(self.host + '/robot/commands', json={
             'thrust': self.thrust,
