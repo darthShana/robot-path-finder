@@ -18,6 +18,7 @@ def follow(q, way_points, robot):
     last_location = Point(0, 0)
     current_orientation = Vector(Point(0, 0), Point(0, 1))
     robot.straight()
+    robot.boost()
 
     try:
         while True:

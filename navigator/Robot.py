@@ -43,9 +43,17 @@ class Robot:
             'heading': self.heading
         })
 
+    def boost(self):
+        self.thrust = 1400
+
+        requests.post(self.host + '/robot/commands', json={
+            'thrust': self.thrust,
+            'heading': self.heading
+        })
+
     def accelerate(self):
         if self.thrust > 1300:
-            self.thrust -= 5
+            self.thrust -= 1
 
         print('thrust:'+str(self.thrust)+' heading:'+str(self.heading))
 
@@ -56,7 +64,7 @@ class Robot:
 
     def decelerate(self):
         if self.thrust < 1500:
-            self.thrust += 5
+            self.thrust += 1
 
         print('thrust:'+str(self.thrust)+' heading:'+str(self.heading))
 
